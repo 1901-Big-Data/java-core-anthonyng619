@@ -1,5 +1,9 @@
 package com.revature.eval.java.core;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.Period;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -768,8 +772,22 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isPangram(String string) {
-		// TODO Write an implementation for this method declaration
-		return false;
+		HashSet<Character> set = new HashSet<Character>();
+		
+		char[] charArray = string.toCharArray();
+		
+		for(char c : charArray) {
+			char ch = Character.toLowerCase(c);
+			if(ch >= 'a' && ch <= 'z') {
+				set.add(ch);
+			}
+		}
+		
+		if(set.size() != 26) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	/**
@@ -781,8 +799,62 @@ public class EvaluationService {
 	 * @return
 	 */
 	public Temporal getGigasecondDate(Temporal given) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		int[] currentDate = new int[] {0,0,0,0,0,0};
+		String[] givenDate = given.toString().split("[^0-9.]");
+		
+		for(int i=0; i < givenDate.length; i++) {
+			currentDate[i] = Integer.parseInt(givenDate[i]);
+			System.out.println(currentDate[i]);
+		}
+		
+		int seconds = 1000000000;
+		int minutes = seconds/60;
+		int leftoverSeconds = seconds%60;
+		int hours = minutes/60;
+		int leftoverMinutes = minutes%60;
+		int days = hours/24;
+		int leftoverHours = hours%24;
+		//int leftoverDays = 0;
+
+		// Add seconds
+		if(currentDate[5] + leftoverSeconds > 59) {
+			currentDate[5] = (currentDate[5] + leftoverSeconds) % 60;
+			leftoverMinutes += 1;
+		} else {
+			currentDate[5] = currentDate[5] + leftoverSeconds;
+		}
+		
+		// Add minutes
+		if(currentDate[4] + leftoverMinutes > 59) {
+			currentDate[4] = (currentDate[4] + leftoverMinutes) % 60;
+			leftoverHours += 1;
+		} else {
+			currentDate[4] = currentDate[4] + leftoverMinutes;
+		}
+		
+		// Add hours
+		if(currentDate[3] + leftoverHours > 23) {
+			currentDate[3] = (currentDate[3] + leftoverHours) % 24;
+			//leftoverDays += 1;
+			days += 1;
+		} else {
+			currentDate[3] = currentDate[3] + leftoverHours;
+		}
+		
+		Temporal halfGiven = given.plus(Period.ofDays(days));
+		
+		int[] newDate = new int[] {0,0,0,0,0,0};
+		givenDate = halfGiven.toString().split("[^0-9.]");
+		
+		for(int i=0; i < givenDate.length; i++) {
+			newDate[i] = Integer.parseInt(givenDate[i]);
+		}
+		
+		newDate[3] = currentDate[3];
+		newDate[4] = currentDate[4];
+		newDate[5] = currentDate[5];
+		
+		return LocalDateTime.of(newDate[0], newDate[1], newDate[2], newDate[3], newDate[4], newDate[5]);		
 	}
 
 	/**
