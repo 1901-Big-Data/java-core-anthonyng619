@@ -190,6 +190,12 @@ public class EvaluationServiceTest {
 		expectedException.expect(IllegalArgumentException.class);
 		evaluationService.cleanPhoneNumber("123-@:!-7890");
 	}
+	
+	@Test
+	public void invalidCountryCode() {
+		expectedException.expect(IllegalArgumentException.class);
+		evaluationService.cleanPhoneNumber("4 223 456 7890");
+	}
 
 	/*******************************************************************
 	 * Question 6
