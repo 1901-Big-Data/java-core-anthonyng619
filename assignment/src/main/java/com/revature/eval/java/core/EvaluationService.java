@@ -727,8 +727,31 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isValidIsbn(String string) {
-		// TODO Write an implementation for this method declaration
-		return false;
+		int formulaCounter = 10;
+		char[] charArray = string.toCharArray();
+		
+		boolean validCheckChar = false;
+		int sum = 0;
+		for(char c : charArray) {
+			if(c >= '0' && c <= '9' || c == 'X') {
+				if(c == 'X') { // Edge case multiple check numbers
+					if(validCheckChar) {
+						return false;
+					}
+					validCheckChar = true;
+				}
+				int cInt = c == 'X' ? 10 : c - '0';
+				sum += formulaCounter*cInt;
+				formulaCounter--;
+			}
+			else if(c == '-') {
+				// Do nothing
+			}
+			else {
+				return false;
+			}
+		}
+		return sum%11 == 0;
 	}
 
 	/**
