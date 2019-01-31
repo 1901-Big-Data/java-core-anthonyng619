@@ -583,7 +583,7 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int calculateNthPrime(int i) {
-		if(i < 2) {
+		if(i < 1) {
 			throw new IllegalArgumentException();
 		}
 		
@@ -653,10 +653,30 @@ public class EvaluationService {
 			final int total = 25;
 			char[] charArray = string.toCharArray();
 			
+			int charCount = 0;
+			
+			StringBuilder encryptedMessage = new StringBuilder();
 			for(char c : charArray) {
-				
+				char ch = Character.toLowerCase(c);
+				if(ch >= 'a' && ch <='z') {
+					if(charCount > 4) {
+						charCount = 0;
+						encryptedMessage.append(' ');
+					}
+					char encryptedChar = (char) (total - (ch - 'a') + 'a');
+					encryptedMessage.append(encryptedChar);
+					charCount++;
+				}
+				else if(ch >= '0' && ch <= '9') {
+					if(charCount > 4) {
+						charCount = 0;
+						encryptedMessage.append(' ');
+					}
+					encryptedMessage.append(ch);
+					charCount++;
+				}
 			}
-			return null;
+			return encryptedMessage.toString();
 		}
 
 		/**
@@ -666,8 +686,21 @@ public class EvaluationService {
 		 * @return
 		 */
 		public static String decode(String string) {
-			// TODO Write an implementation for this method declaration
-			return null;
+			final int total = 25;
+			char[] charArray = string.toCharArray();
+			
+			StringBuilder decryptedMessage = new StringBuilder();
+			for(char c : charArray) {
+				if(c >= 'a' && c <='z') {
+					char decryptedChar = (char) (total-(c -'a') + 'a');
+					decryptedMessage.append(decryptedChar);
+				}
+				else if(c >= '0' && c <= '9') {
+					decryptedMessage.append(c);
+				}
+			}
+			
+			return decryptedMessage.toString();
 		}
 	}
 
