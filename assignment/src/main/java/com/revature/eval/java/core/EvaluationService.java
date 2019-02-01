@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 public class EvaluationService {
 
@@ -871,8 +872,21 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int getSumOfMultiples(int i, int[] set) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+		
+		HashSet<Integer> multiples = new HashSet<Integer>();
+		
+		for(int j=0; j< set.length; j++) {
+			for(int k=1; k*set[j] < i; k++) {
+				multiples.add(k*set[j]);
+			}
+		}
+		
+		int sum = 0;
+		for(Integer item : multiples) {
+			sum += item;
+		}
+		
+		return sum;
 	}
 
 	/**
@@ -912,8 +926,44 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isLuhnValid(String string) {
-		// TODO Write an implementation for this method declaration
-		return false;
+		// String length must be >= 2
+		if(string.length() <= 1) {
+			return false;
+		}
+		Stack<Integer> stack = new Stack<Integer>();
+		
+		// Spaces allowed but stripped
+		// Only digit characters
+		char[] charArray = string.toCharArray();
+		
+		for(char c : charArray) {
+			if(c >= '0' && c <= '9') {
+				int c_int = c - '0';
+				stack.add(c_int);
+			}
+			else if(c == ' ') {
+				continue;
+			} else {
+				return false;
+			}
+		}
+		
+		int sum = 0;
+	
+		boolean even = false;
+		
+		while(!stack.empty()) {
+			int curr = stack.pop();
+			if(even) { // This will be the second even integer from the right...
+				even = false;
+				sum += (curr*2) > 9 ? (curr*2) - 9: curr*2;
+			}
+			else {
+				even = true;
+				sum += curr;
+			}
+		}
+		return sum%10 == 0;
 	}
 
 	/**
@@ -944,8 +994,44 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int solveWordProblem(String string) {
-		// TODO Write an implementation for this method declaration
+		String[] stringArray = string.split("[^\\p{L}0-9-]+");
+		int[] integers = integersAB(stringArray);
+		for(int i = 0; i < stringArray.length; i++) {
+			switch(stringArray[i]) {
+			case "plus":
+				return integers[0] + integers[1];
+			case "minus":
+				return integers[0] - integers[1];
+			case "multiplied":
+				return integers[0] * integers[1];
+			case "divided":
+				return integers[0] / integers[1];
+			default:
+				continue;
+			}
+		}
 		return 0;
+	}
+	
+	// Helper method to find the first or second integer in the string
+	public int[] integersAB(String[] stringArray) {	
+		int[] firstsecond = new int[] {0, 0};
+		
+		int counter = 0;
+		for(String str : stringArray) {
+			if(counter == 2) {
+				break;
+			}
+			try {
+				int number = Integer.parseInt(str);
+				firstsecond[counter] = number;
+				counter++;
+			} catch(NumberFormatException e) {
+				// Do nothing
+			}
+		}
+
+		return firstsecond;
 	}
 
 }
