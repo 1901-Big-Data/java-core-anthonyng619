@@ -595,9 +595,9 @@ public class EvaluationService {
 		HashSet<Integer> primeFactorsFound = new HashSet<Integer>();
 		primeFactorsFound.add(2);
 		
+		// Number of primes found
 		int found = 1;
-		
-		int currentNumber = 2;
+		int currentNumber = 3;
 		
 		while(found < i) {
 			boolean addPrime = true;
@@ -605,8 +605,10 @@ public class EvaluationService {
 			for(Integer prime: primeFactorsFound) {
 				if(currentNumber%prime == 0) {
 					addPrime = false;
+					break;
 				}
 			}
+	
 			
 			// Check if any pre-existing primes are prime factors of the current number
 			if(addPrime) {
@@ -614,12 +616,13 @@ public class EvaluationService {
 				found++;
 			}
 			if(found < i) {
-				currentNumber++;
+				currentNumber+= 2;
 			}
 			
 		}
 		
 		return currentNumber;
+		
 	}
 
 	/**
